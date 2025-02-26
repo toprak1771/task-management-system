@@ -16,8 +16,14 @@ export class Project {
     @Prop({default:0})
     percentage:number;
 
-    @Prop({type:mongoose.Schema.Types.ObjectId,ref:'Task'})
-    tasks:Task[]
+    // @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'Task' })
+    // tasks:mongoose.Types.ObjectId[]
+
+    @Prop({type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }] })
+    tasks: Task[];
+
+    @Prop({default:false})
+    is_complete:boolean;
 }
 
 export const projectSchema = SchemaFactory.createForClass(Project);

@@ -1,21 +1,37 @@
-import { IsArray, IsNotEmpty,IsNumber,IsOptional,IsString } from "class-validator"
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsMongoId,
+  IsBoolean,
+} from "class-validator";
 import { Task } from "src/task/schemas/task.schema";
 
 export class CreateProjectDto {
-    @IsNotEmpty()
-    @IsString()
-    name:string;
+  @IsOptional()
+  @IsMongoId()
+  _id: string;
 
-    @IsNotEmpty()
-    @IsString()
-    description:string;
+  @IsNotEmpty()
+  @IsString()
+  name: string;
 
-    @IsOptional()
-    @IsNumber()
-    percentage:number;
+  @IsNotEmpty()
+  @IsString()
+  description: string;
 
-    @IsOptional()
-    @IsArray()
-    tasks:Task[]
+  @IsOptional()
+  @IsNumber()
+  percentage: number;
 
+  @IsOptional()
+  @IsBoolean()
+  is_complete: boolean;
+
+  @IsOptional()
+  @IsArray()
+  @IsMongoId({ each: true })
+  tasks: string[];
 }

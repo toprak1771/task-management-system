@@ -9,5 +9,6 @@ import { DatabaseModule } from 'src/database/database.module';
   imports: [DatabaseModule],
   controllers: [ProjectController],
   providers: [ProjectRepository,ProjectService,...projectProviders],
+  exports:[ProjectService]
 })
 export class ProjectModule {}

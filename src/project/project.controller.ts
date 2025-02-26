@@ -1,4 +1,4 @@
-import { ProjectService } from './project.service';
+import { ProjectService } from "./project.service";
 import {
   Controller,
   Get,
@@ -9,33 +9,34 @@ import {
   Delete,
   Next,
   Req,
-  Res
+  Res,
+  HttpException,
+  HttpStatus,
 } from "@nestjs/common";
-import { CreateProjectDto } from './dto/create.project.dto';
+import { CreateProjectDto } from "./dto/create.project.dto";
 
-@Controller('project')
+@Controller("project")
 export class ProjectController {
-  constructor(private readonly projectService: ProjectService) {
-  }
+  constructor(private readonly projectService: ProjectService) {}
 
   @Post()
   async create(
-    @Body() createProjectDto:CreateProjectDto,
+    @Body() createProjectDto: CreateProjectDto,
     @Req() req,
     @Res() res,
     @Next() next,
-  ):Promise<void> {
+  ): Promise<void> {
     try {
-      console.log("createProjectDto:",createProjectDto);
+      console.log("createProjectDto:", createProjectDto);
       const createdProject = await this.projectService.create(createProjectDto);
 
       return res.status(201).json({
-        data:createdProject,
-        message:'Successfully project created.'
-      })
+        data: createdProject,
+        message: "Successfully project created.",
+      });
     } catch (error) {
-      console.log("error:",error);
+      console.log("error:", error.message);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
-    
   }
 }
