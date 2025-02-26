@@ -3,7 +3,8 @@ import { CreateTaskDto } from "./create.task.dto";
 import { IsMongoId, IsNotEmpty } from "class-validator";
 import { Types } from "mongoose";
 
-export class UpdateTaskDto extends PartialType(CreateTaskDto) {}
+export class UpdateTaskDto extends PartialType(CreateTaskDto) {
+}
 
 export class UpdateTaskDtoSubTask {
     @IsNotEmpty()

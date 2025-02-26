@@ -1,34 +1,45 @@
-import { IsArray, IsNotEmpty,IsNumber,IsOptional,IsString,IsMongoId,IsBoolean } from "class-validator"
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsMongoId,
+  IsBoolean,
+} from "class-validator";
 import { SubTask } from "src/sub-task/schemas/sub-task.schema";
 
 export class CreateTaskDto {
-    @IsNotEmpty()
-    @IsString()
-    name:string;
+  @IsOptional()
+  @IsMongoId()
+  _id: string;
 
-    @IsNotEmpty()
-    @IsString()
-    description:string;
+  @IsNotEmpty()
+  @IsString()
+  name: string;
 
-    @IsOptional()
-    @IsNumber()
-    percentage:number;
+  @IsNotEmpty()
+  @IsString()
+  description: string;
 
-    @IsOptional()
-    @IsBoolean()
-    is_complete:boolean;
+  @IsOptional()
+  @IsNumber()
+  percentage: number;
 
-    @IsNotEmpty()
-    @IsNumber()
-    weight:number;
+  @IsOptional()
+  @IsBoolean()
+  is_complete: boolean;
 
-    @IsNotEmpty()
-    @IsMongoId()
-    project_id:string;
+  @IsNotEmpty()
+  @IsNumber()
+  weight: number;
 
-    @IsOptional()
-    @IsArray()
-    @IsMongoId({each:true})
-    subTasks:string[]
+  @IsNotEmpty()
+  @IsMongoId()
+  project_id: string;
 
+  @IsOptional()
+  @IsArray()
+  @IsMongoId({ each: true })
+  subTasks: string[];
 }

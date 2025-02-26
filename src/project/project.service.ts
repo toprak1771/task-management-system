@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ProjectRepository } from './project.repository';
 import { CreateProjectDto } from './dto/create.project.dto';
-import { UpdateProjectDtoTask } from './dto/update.project.dto';
+import { UpdateProjectDto, UpdateProjectDtoTask } from './dto/update.project.dto';
 import { Project,ProjectDocument } from './schemas/project.schema';
 
 
@@ -14,8 +14,15 @@ export class ProjectService {
         return createdProject;
     }
 
+    async update(data:UpdateProjectDto):Promise<ProjectDocument> {
+        const updatedProject = await this.projectRepository.updateProject(data);
+        return updatedProject;
+    }
+
     async updateTask(data:UpdateProjectDtoTask):Promise<ProjectDocument> {
         const updatedProject = await this.projectRepository.updateTask(data);
         return updatedProject;
     }
+
+    
 }

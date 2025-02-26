@@ -3,7 +3,9 @@ import { CreateProjectDto } from "./create.project.dto";
 import { IsMongoId, IsNotEmpty } from "class-validator";
 import { Types } from "mongoose";
 
-export class UpdateProjectDto extends PartialType(CreateProjectDto) {}
+export class UpdateProjectDto extends PartialType(CreateProjectDto) {
+    
+}
 
 export class UpdateProjectDtoTask {
     @IsNotEmpty()

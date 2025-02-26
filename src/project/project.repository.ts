@@ -2,7 +2,7 @@ import { Injectable, Inject } from "@nestjs/common";
 import { CreateProjectDto } from "./dto/create.project.dto";
 import { Project,ProjectDocument } from "./schemas/project.schema";
 import { Model } from "mongoose";
-import { UpdateProjectDtoTask } from "./dto/update.project.dto";
+import { UpdateProjectDto, UpdateProjectDtoTask } from "./dto/update.project.dto";
 
 @Injectable()
 export class ProjectRepository {
@@ -13,6 +13,11 @@ export class ProjectRepository {
     return await createdProject.save();
   }
 
+  async updateProject(data:UpdateProjectDto):Promise<ProjectDocument> {
+    const updatedProject = await this.projectModel.findOneAndUpdate({_id:data._id},data,{new:true});
+    return updatedProject;
+  }
+
   async updateTask(data: UpdateProjectDtoTask): Promise<ProjectDocument> {
     const updatedProject = await this.projectModel.findOneAndUpdate(
       { _id: data._id },
@@ -21,4 +26,5 @@ export class ProjectRepository {
     );
     return updatedProject;
   }
+
 }
