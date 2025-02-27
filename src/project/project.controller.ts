@@ -15,12 +15,20 @@ import {
 } from "@nestjs/common";
 import { CreateProjectDto } from "./dto/create.project.dto";
 import { Multer } from "src/services/multer";
+import { ApiTags,ApiOperation,ApiOkResponse,ApiCreatedResponse,ApiBadRequestResponse, ApiBody, ApiConsumes, ApiQuery } from "@nestjs/swagger";
+import { ProjectDto } from "./dto/project.dto";
+import { UpdateProjectDtoTask } from "./dto/update.project.dto";
 
+@ApiTags('project')
 @Controller("project")
 export class ProjectController {
   constructor(private readonly projectService: ProjectService,private readonly multerService:Multer) {}
 
   @Post()
+  @ApiOperation({summary:'Created a new project.'})
+  @ApiCreatedResponse({description:'Successfully project created.',type:CreateProjectDto})
+  @ApiBadRequestResponse({description:'Invalid data provided'})
+  @ApiBody({type:CreateProjectDto})
   async create(
     @Body() createProjectDto: CreateProjectDto,
     @Req() req,
@@ -37,11 +45,28 @@ export class ProjectController {
       });
     } catch (error) {
       console.log("error:", error.message);
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException('Invalid data provided', HttpStatus.BAD_REQUEST);
     }
   }
 
   @Post('upload')
+  @ApiOperation({summary:'Upload file.'})
+  @ApiOkResponse({description:'Upload file successfully.'})
+  @ApiBadRequestResponse({description:'Invalid data provided'})
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string', description: 'Project ID' },  // id parametresi
+        file: { 
+          type: 'string', 
+          format: 'binary', 
+          description: 'File to upload' 
+        },  // file parametresi
+      },
+    },
+  })
+  @ApiConsumes('multipart/form-data')
   async uploadFile(
     @Req() req,
     @Res() res,
@@ -63,6 +88,9 @@ export class ProjectController {
   }
 
   @Get()
+  @ApiOperation({summary:'Get All projects.'})
+  @ApiOkResponse({description:'Succesfully listed projects.',type:ProjectDto})
+  @ApiQuery({name:'id',required:false,type:String})
   async getAll(
     @Req() req,
     @Res() res,

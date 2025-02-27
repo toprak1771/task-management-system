@@ -14,7 +14,20 @@ import { TaskService } from "./task.service";
 import { CreateTaskDto } from "./dto/create.task.dto";
 import { ProjectService } from "src/project/project.service";
 import { UpdateTaskDto } from "./dto/update.task.dto";
+import {
+  ApiTags,
+  ApiOperation,
+  ApiOkResponse,
+  ApiCreatedResponse,
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiConsumes,
+  ApiQuery,
+} from "@nestjs/swagger";
+import { UpdateProjectDto } from "src/project/dto/update.project.dto";
+import { TaskDto, UpdateWeightCompleteTaskDto } from "./dto/task.dto";
 
+@ApiTags("task")
 @Controller("task")
 export class TaskController {
   constructor(
@@ -23,6 +36,13 @@ export class TaskController {
   ) {}
 
   @Post()
+  @ApiOperation({ summary: "Created a new task." })
+  @ApiCreatedResponse({
+    description: "Successfully task created.",
+    type: CreateTaskDto,
+  })
+  @ApiBadRequestResponse({ description: "Invalid data provided" })
+  @ApiBody({ type: CreateTaskDto }) 
   async create(
     @Body() createtaskDto: CreateTaskDto,
     @Req() req,
@@ -39,7 +59,10 @@ export class TaskController {
       });
 
       //weight üzerinden proje percentage hesapları
-      const changeProjectPercentage = await this.taskService.updatePercentageProject({project_id:createdTask.project_id.toString()});
+      const changeProjectPercentage =
+        await this.taskService.updatePercentageProject({
+          project_id: createdTask.project_id.toString(),
+        });
 
       return res.status(201).json({
         data: createdTask,
@@ -52,6 +75,13 @@ export class TaskController {
   }
 
   @Put()
+  @ApiOperation({ summary: "Update a new task." })
+  @ApiCreatedResponse({
+    description: "Successfully task updated and change percentage of project.",
+    type: UpdateWeightCompleteTaskDto,
+  })
+  @ApiBadRequestResponse({ description: "Invalid data provided" })
+  @ApiBody({ type: UpdateWeightCompleteTaskDto }) 
   async update(
     @Body() updatetaskDto: UpdateTaskDto,
     @Req() req,
@@ -61,9 +91,12 @@ export class TaskController {
     try {
       console.log("updatetaskDto:", updatetaskDto);
       const updatedTask = await this.taskService.update(updatetaskDto);
-      console.log("updatedTask:",updatedTask);
+      console.log("updatedTask:", updatedTask);
 
-      const changeProjectPercentage = await this.taskService.updatePercentageProject({project_id:updatedTask.project_id.toString()});
+      const changeProjectPercentage =
+        await this.taskService.updatePercentageProject({
+          project_id: updatedTask.project_id.toString(),
+        });
 
       return res.status(200).json({
         data: updatedTask,
@@ -76,14 +109,21 @@ export class TaskController {
   }
 
   @Get()
-  async getAll(
-    @Req() req,
-    @Res() res,
-    @Next() next,
-  ): Promise<void> {
+  @ApiOperation({ summary: "Get All tasks." })
+  @ApiOkResponse({ description: "Succesfully listed projects.", type: TaskDto })
+  @ApiBadRequestResponse({description:'Project id is required'})
+  @ApiQuery({name:'project_id',required:true,type:String})
+  async getAll(@Req() req, @Res() res, @Next() next): Promise<void> {
     try {
-      const {query:{project_id}} = req;
-      const getAllTasks = await this.taskService.getAllwithProjectId({project_id:project_id});
+      const {
+        query: { project_id },
+      } = req;
+      if(!project_id) {
+        throw new HttpException('Project id is required', HttpStatus.BAD_REQUEST);
+      }
+      const getAllTasks = await this.taskService.getAllwithProjectId({
+        project_id: project_id,
+      });
 
       return res.status(200).json({
         data: getAllTasks,
