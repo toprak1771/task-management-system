@@ -12,12 +12,14 @@ import {
   Res,
   HttpException,
   HttpStatus,
+  UseInterceptors,
 } from "@nestjs/common";
 import { CreateProjectDto } from "./dto/create.project.dto";
 import { Multer } from "src/services/multer";
 import { ApiTags,ApiOperation,ApiOkResponse,ApiCreatedResponse,ApiBadRequestResponse, ApiBody, ApiConsumes, ApiQuery } from "@nestjs/swagger";
 import { ProjectDto } from "./dto/project.dto";
 import { UpdateProjectDtoTask } from "./dto/update.project.dto";
+import { FileFieldsInterceptor } from "@nestjs/platform-express";
 
 @ApiTags('project')
 @Controller("project")
@@ -58,7 +60,7 @@ export class ProjectController {
       type: 'object',
       properties: {
         id: { type: 'string', description: 'Project ID' },  // id parametresi
-        file: { 
+        files: { 
           type: 'string', 
           format: 'binary', 
           description: 'File to upload' 

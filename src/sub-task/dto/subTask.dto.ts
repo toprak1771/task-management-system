@@ -4,7 +4,7 @@ export class SubTaskDto {
   @ApiProperty({ example: "60c72b2f9b1d4c001c8e4d46" })
   _id: string;
 
-  @ApiProperty({ example: "SUbTask Name" })
+  @ApiProperty({ example: "SubTask Name" })
   name: string;
 
   @ApiProperty({ example: "Some description" })
@@ -27,7 +27,7 @@ export class UpdateWeightCompleteSubTaskDto {
   @ApiProperty({ example: "60c72b2f9b1d4c001c8e4d46" })
   _id: string;
 
-  @ApiProperty({ example: "Task Name" })
+  @ApiProperty({ example: "SubTask Name" })
   name: string;
 
   @ApiProperty({ example: "Some description" })

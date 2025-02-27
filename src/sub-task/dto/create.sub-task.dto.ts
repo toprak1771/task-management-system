@@ -12,7 +12,6 @@ export class CreateSubTaskDto {
     @IsString()
     description:string;
 
-    @ApiProperty({ example: 17.17 })
     @IsOptional()
     @IsNumber()
     percentage:number;

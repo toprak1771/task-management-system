@@ -11,7 +11,6 @@ import { Task } from "src/task/schemas/task.schema";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateProjectDto {
-  @ApiProperty({ example: '60c72b2f9b1d4c001c8e4d46' })
   @IsOptional()
   @IsMongoId()
   _id: string;
@@ -26,7 +25,6 @@ export class CreateProjectDto {
   @IsString()
   description: string;
 
-  @ApiProperty({ example: 17.17 })
   @IsOptional()
   @IsNumber()
   percentage: number;

@@ -25,7 +25,6 @@ export class CreateTaskDto {
   @IsString()
   description: string;
 
-  @ApiProperty({ example: 17.17 })
   @IsOptional()
   @IsNumber()
   percentage: number;
