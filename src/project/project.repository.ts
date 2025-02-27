@@ -47,4 +47,13 @@ export class ProjectRepository {
     return updatedProject;
   }
 
+  async updateFilePath(data:{_id:string,filePath:string}): Promise<ProjectDocument> {
+    const updatedProject = await this.projectModel.findOneAndUpdate(
+      { _id: data._id },
+      { $push: { files: data.filePath } },
+      { new: true },
+    );
+    return updatedProject;
+  }
+
 }

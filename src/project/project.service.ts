@@ -36,5 +36,19 @@ export class ProjectService {
         return updatedProject;
     }
 
+    async getFileUrl(_id:string,filePath:string):Promise<ProjectDocument> {
+        const base_url = process.env.BASE_URL;
+
+        const relativePath = filePath.split('public')[1];
+
+        const formattedPath = relativePath.replace(/\\/g, '/');
+
+        const _filePath = `${base_url}/static${formattedPath}`
+
+        const updatedProject = await this.projectRepository.updateFilePath({_id:_id,filePath:_filePath});
+
+        return updatedProject;
+    }
+
     
 }

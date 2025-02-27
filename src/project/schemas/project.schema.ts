@@ -24,6 +24,9 @@ export class Project {
 
     @Prop({default:false})
     is_complete:boolean;
+
+    @Prop()
+    files:[]
 }
 
 export const projectSchema = SchemaFactory.createForClass(Project);

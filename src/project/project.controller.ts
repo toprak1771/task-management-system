@@ -14,10 +14,11 @@ import {
   HttpStatus,
 } from "@nestjs/common";
 import { CreateProjectDto } from "./dto/create.project.dto";
+import { Multer } from "src/services/multer";
 
 @Controller("project")
 export class ProjectController {
-  constructor(private readonly projectService: ProjectService) {}
+  constructor(private readonly projectService: ProjectService,private readonly multerService:Multer) {}
 
   @Post()
   async create(
@@ -34,6 +35,27 @@ export class ProjectController {
         data: createdProject,
         message: "Successfully project created.",
       });
+    } catch (error) {
+      console.log("error:", error.message);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Post('upload')
+  async uploadFile(
+    @Req() req,
+    @Res() res,
+    @Next() next,
+  ): Promise<void> {
+    try {
+      const uploadFiles = await this.multerService.handleArrayUploadFile(req,res,"project");
+      const updatedProject = await this.projectService.getFileUrl(uploadFiles.body.id,uploadFiles.files[0].path);
+      
+      return res.status(200).json({
+        data:updatedProject,
+        message:'Upload file successfully.'
+      })
+
     } catch (error) {
       console.log("error:", error.message);
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
