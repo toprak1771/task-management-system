@@ -13,6 +13,26 @@ export class ProjectRepository {
     return await createdProject.save();
   }
 
+  async getAll():Promise<ProjectDocument[]> {
+    const getAllProject = await this.projectModel.find().populate({
+      path:'tasks',
+      populate: {
+        path:'subTasks'
+      }
+    });
+    return getAllProject;
+  }
+
+  async getById(data:{_id:string}):Promise<ProjectDocument[]> {
+    const getProject = await this.projectModel.find({_id:data._id}).populate({
+      path:'tasks',
+      populate: {
+        path:'subTasks'
+      }
+    });
+    return getProject;
+  }
+
   async updateProject(data:UpdateProjectDto):Promise<ProjectDocument> {
     const updatedProject = await this.projectModel.findOneAndUpdate({_id:data._id},data,{new:true});
     return updatedProject;

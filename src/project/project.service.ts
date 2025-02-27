@@ -14,6 +14,18 @@ export class ProjectService {
         return createdProject;
     }
 
+    async getAll(data:{_id:string}):Promise<ProjectDocument[]> {
+        let projectDocument;
+        if(data._id && data._id !== null) {
+            projectDocument = await this.projectRepository.getById({_id:data._id});
+            
+        } else {
+            projectDocument = await this.projectRepository.getAll();
+        }
+
+        return projectDocument;
+    }
+
     async update(data:UpdateProjectDto):Promise<ProjectDocument> {
         const updatedProject = await this.projectRepository.updateProject(data);
         return updatedProject;
