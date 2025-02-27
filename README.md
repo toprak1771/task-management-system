@@ -5,3 +5,5 @@ BASE_URL = "http://localhost:3000"
 
 Daha sonra npm i diyerek bağılılıkları yükleyin.
 Ardından npm run start:dev ile projeyi çalıştırabilirsiniz.
+
+Projeyi çalıştırdıktan sonra, swagger Dökümanına http://localhost:3000/api ulaşabilirsiniz.
