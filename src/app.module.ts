@@ -1,12 +1,14 @@
 import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { DatabaseModule } from "./database/database.module";
 import { ProjectModule } from "./project/project.module";
 import { TaskModule } from "./task/task.module";
 import { SubTaskModule } from "./sub-task/sub-task.module";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
+import { MongooseModule } from "@nestjs/mongoose";
+import * as dotenv from 'dotenv'
+dotenv.config();
 
 @Module({
   imports: [
@@ -14,10 +16,10 @@ import { join } from "path";
       rootPath: join(__dirname, "..", "public"),
       serveRoot:'/static'
     }),
-    DatabaseModule,
     ProjectModule,
     TaskModule,
     SubTaskModule,
+    MongooseModule.forRoot(process.env.DATABASE_URL)
   ],
   controllers: [AppController],
   providers: [AppService],

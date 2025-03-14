@@ -1,4 +1,5 @@
-import { Injectable, Inject } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { SubTask, SubTaskDocument } from "./schemas/sub-task.schema";
 import { CreateSubTaskDto } from "./dto/create.sub-task.dto";
@@ -6,7 +7,7 @@ import { UpdateSubTaskDto } from "./dto/update.sub-task.dto";
 
 @Injectable()
 export class SubTaskRepository {
-  constructor(@Inject("SUBTASK_MODEL") private subTaskModel: Model<SubTask>) {}
+  constructor(@InjectModel(SubTask.name) private subTaskModel: Model<SubTask>) {}
 
   async create(data: CreateSubTaskDto): Promise<SubTaskDocument> {
     const createdSubTask = new this.subTaskModel(data);

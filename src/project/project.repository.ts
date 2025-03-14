@@ -1,16 +1,27 @@
-import { Injectable, Inject } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
+import { InjectConnection, InjectModel } from "@nestjs/mongoose";
 import { CreateProjectDto } from "./dto/create.project.dto";
 import { Project,ProjectDocument } from "./schemas/project.schema";
-import { Model } from "mongoose";
+import { Connection, Model } from "mongoose";
 import { UpdateProjectDto, UpdateProjectDtoTask } from "./dto/update.project.dto";
 
 @Injectable()
 export class ProjectRepository {
-  constructor(@Inject("PROJECT_MODEL") private projectModel: Model<Project>) {}
+  constructor(@InjectModel(Project.name) private projectModel: Model<Project>,@InjectConnection() private readonly connection:Connection) {}
 
   async create(data: CreateProjectDto): Promise<ProjectDocument> {
-    const createdProject = new this.projectModel(data);
-    return await createdProject.save();
+    const session = await this.connection.startSession();
+    session.startTransaction();
+    try {
+      const createdProject = new this.projectModel(data);
+      session.commitTransaction();
+      return await createdProject.save();
+    } catch (err) {
+      session.abortTransaction();
+    } finally {
+      session.endSession();
+    }
+   
   }
 
   async getAll():Promise<ProjectDocument[]> {

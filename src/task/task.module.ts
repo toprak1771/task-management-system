@@ -2,14 +2,14 @@ import { Module } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { TaskRepository } from './task.repository';
 import { TaskController } from './task.controller';
-import { taskProviders } from './task.provider';
-import { DatabaseModule } from 'src/database/database.module';
 import { ProjectModule } from 'src/project/project.module';
+import { Task,taskSchema } from './schemas/task.schema';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
-  imports: [DatabaseModule,ProjectModule],
+  imports: [MongooseModule.forFeature([{name:Task.name,schema:taskSchema}]),ProjectModule],
   controllers: [TaskController],
-  providers: [TaskRepository,TaskService,...taskProviders],
+  providers: [TaskRepository,TaskService],
   exports:[TaskService]
 })
 export class TaskModule {}
