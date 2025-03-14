@@ -1,13 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
+import { InjectConnection,InjectModel } from "@nestjs/mongoose";
 import { Task, TaskDocument } from "./schemas/task.schema";
-import { Model } from "mongoose";
+import { Connection,Model } from "mongoose";
 import { CreateTaskDto } from "./dto/create.task.dto";
 import { UpdateTaskDto, UpdateTaskDtoSubTask } from "./dto/update.task.dto";
 
 @Injectable()
 export class TaskRepository {
-  constructor(@InjectModel(Task.name) private taskModel: Model<Task>) {}
+  constructor(@InjectModel(Task.name,'managements') private taskModel: Model<Task>,@InjectConnection('managements') private readonly connection:Connection) {}
 
   async create(data: CreateTaskDto): Promise<TaskDocument> {
     const createdTask = new this.taskModel(data);

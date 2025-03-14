@@ -7,7 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { subTaskSchema,SubTask } from './schemas/sub-task.schema';
 
 @Module({
-  imports:[MongooseModule.forFeature([{name:SubTask.name,schema:subTaskSchema}]),TaskModule],
+  imports:[MongooseModule.forFeature([{name:SubTask.name,schema:subTaskSchema}],'managements'),TaskModule],
   controllers: [SubTaskController],
   providers: [SubTaskRepository,SubTaskService],
 })

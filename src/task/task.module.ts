@@ -7,7 +7,7 @@ import { Task,taskSchema } from './schemas/task.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
-  imports: [MongooseModule.forFeature([{name:Task.name,schema:taskSchema}]),ProjectModule],
+  imports: [MongooseModule.forFeature([{name:Task.name,schema:taskSchema}],'managements'),ProjectModule],
   controllers: [TaskController],
   providers: [TaskRepository,TaskService],
   exports:[TaskService]

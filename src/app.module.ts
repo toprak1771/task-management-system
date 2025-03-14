@@ -7,6 +7,7 @@ import { SubTaskModule } from "./sub-task/sub-task.module";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
 import { MongooseModule } from "@nestjs/mongoose";
+import { UserModule } from './user/user.module';
 import * as dotenv from 'dotenv'
 dotenv.config();
 
@@ -19,7 +20,13 @@ dotenv.config();
     ProjectModule,
     TaskModule,
     SubTaskModule,
-    MongooseModule.forRoot(process.env.DATABASE_URL)
+    MongooseModule.forRoot(process.env.DATABASE_URL,{
+      connectionName:'managements',
+    }),
+    MongooseModule.forRoot(process.env.DATABASE_URL_USER,{
+      connectionName:'users',
+    }),
+    UserModule,     
   ],
   controllers: [AppController],
   providers: [AppService],

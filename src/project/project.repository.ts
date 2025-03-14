@@ -7,7 +7,7 @@ import { UpdateProjectDto, UpdateProjectDtoTask } from "./dto/update.project.dto
 
 @Injectable()
 export class ProjectRepository {
-  constructor(@InjectModel(Project.name) private projectModel: Model<Project>,@InjectConnection() private readonly connection:Connection) {}
+  constructor(@InjectModel(Project.name,'managements') private projectModel: Model<Project>,@InjectConnection('managements') private readonly connection:Connection) {}
 
   async create(data: CreateProjectDto): Promise<ProjectDocument> {
     const session = await this.connection.startSession();
