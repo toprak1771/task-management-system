@@ -1,51 +1,65 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, Injectable } from "@nestjs/common";
 import { InjectConnection, InjectModel } from "@nestjs/mongoose";
 import { CreateProjectDto } from "./dto/create.project.dto";
-import { Project,ProjectDocument } from "./schemas/project.schema";
+import { Project, ProjectDocument } from "./schemas/project.schema";
 import { Connection, Model } from "mongoose";
-import { UpdateProjectDto, UpdateProjectDtoTask } from "./dto/update.project.dto";
+import {
+  UpdateProjectDto,
+  UpdateProjectDtoTask,
+} from "./dto/update.project.dto";
 
 @Injectable()
 export class ProjectRepository {
-  constructor(@InjectModel(Project.name,'managements') private projectModel: Model<Project>,@InjectConnection('managements') private readonly connection:Connection) {}
+  constructor(
+    @InjectModel(Project.name, "managements")
+    private projectModel: Model<Project>,
+    @InjectConnection("managements") private readonly connection: Connection,
+  ) {}
 
   async create(data: CreateProjectDto): Promise<ProjectDocument> {
+    let createdProject;
     const session = await this.connection.startSession();
     session.startTransaction();
     try {
-      const createdProject = new this.projectModel(data);
+      createdProject = new this.projectModel(data);
       session.commitTransaction();
-      return await createdProject.save();
-    } catch (err) {
+    } catch (error) {
       session.abortTransaction();
+      throw new HttpException(error.message, error.status);
     } finally {
       session.endSession();
+      return await createdProject.save();
     }
-   
   }
 
-  async getAll():Promise<ProjectDocument[]> {
+  async getAll(): Promise<ProjectDocument[]> {
     const getAllProject = await this.projectModel.find().populate({
-      path:'tasks',
+      path: "tasks",
       populate: {
-        path:'subTasks'
-      }
+        path: "subTasks",
+      },
     });
     return getAllProject;
   }
 
-  async getById(data:{_id:string}):Promise<ProjectDocument[]> {
-    const getProject = await this.projectModel.find({_id:data._id}).populate({
-      path:'tasks',
-      populate: {
-        path:'subTasks'
-      }
-    });
+  async getById(data: { _id: string }): Promise<ProjectDocument[]> {
+    const getProject = await this.projectModel
+      .find({ _id: data._id })
+      .populate({
+        path: "tasks",
+        populate: {
+          path: "subTasks",
+        },
+      });
     return getProject;
   }
 
-  async updateProject(data:UpdateProjectDto):Promise<ProjectDocument> {
-    const updatedProject = await this.projectModel.findOneAndUpdate({_id:data._id},data,{new:true});
+  async updateProject(data: UpdateProjectDto): Promise<ProjectDocument> {
+    const updatedProject = await this.projectModel.findOneAndUpdate(
+      { _id: data._id },
+      data,
+      { new: true },
+    );
     return updatedProject;
   }
 
@@ -58,7 +72,10 @@ export class ProjectRepository {
     return updatedProject;
   }
 
-  async updateFilePath(data:{_id:string,filePath:string}): Promise<ProjectDocument> {
+  async updateFilePath(data: {
+    _id: string;
+    filePath: string;
+  }): Promise<ProjectDocument> {
     const updatedProject = await this.projectModel.findOneAndUpdate(
       { _id: data._id },
       { $push: { files: data.filePath } },
@@ -66,5 +83,4 @@ export class ProjectRepository {
     );
     return updatedProject;
   }
-
 }

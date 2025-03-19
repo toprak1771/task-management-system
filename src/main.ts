@@ -4,9 +4,20 @@ import { AppModule } from './app.module';
 import * as dotenv from 'dotenv'
 import { ValidationPipe } from '@nestjs/common';
 dotenv.config();
+import * as session from "express-session";
+import * as passport from "passport";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.use(session({
+    secret:'keyboard',
+    resave:false,
+    saveUninitialized:false
+  }))
+
+  app.use(passport.initialize())
+  app.use(passport.session())
 
   const config = new DocumentBuilder()
     .setTitle('Task Management Example')

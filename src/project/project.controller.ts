@@ -20,12 +20,15 @@ import { ApiTags,ApiOperation,ApiOkResponse,ApiCreatedResponse,ApiBadRequestResp
 import { ProjectDto } from "./dto/project.dto";
 import { UpdateProjectDtoTask } from "./dto/update.project.dto";
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
+import { UseGuards } from "@nestjs/common";
+import { AuthenticateGuard } from "src/auth/authenticated.guard";
 
 @ApiTags('project')
 @Controller("project")
 export class ProjectController {
   constructor(private readonly projectService: ProjectService,private readonly multerService:Multer) {}
 
+  @UseGuards(AuthenticateGuard)
   @Post()
   @ApiOperation({summary:'Created a new project.'})
   @ApiCreatedResponse({description:'Successfully project created.',type:CreateProjectDto})

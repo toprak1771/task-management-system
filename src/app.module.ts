@@ -8,6 +8,7 @@ import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
 import { MongooseModule } from "@nestjs/mongoose";
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 import * as dotenv from 'dotenv'
 dotenv.config();
 
@@ -26,7 +27,8 @@ dotenv.config();
     MongooseModule.forRoot(process.env.DATABASE_URL_USER,{
       connectionName:'users',
     }),
-    UserModule,     
+    UserModule,
+    AuthModule,     
   ],
   controllers: [AppController],
   providers: [AppService],
